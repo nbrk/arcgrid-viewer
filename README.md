@@ -12,6 +12,9 @@ The program uses shades of red normalized by minimum and maximum value in the
 VAT of the curent dataset. Black colour represents lower value than the red one.
 
 ## Installation
+The program depends on `gloss` and `arcgrid` libraries. The easiest way is to
+install utulity `stack` and build the software from the source code.
+
 Currently, as this:
 
 ``` sh
@@ -29,6 +32,10 @@ $ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
 ``` sh
 arcgrid-viewer <file.arc>
 ```
+
+Please keep in mind that big datasets take time and resources to parse and render!
+
+There is some sample elevation data from the Alps. It is located 
 
 ## Controls
 The program uses `gloss` library for rendering and display. Therefore, the
