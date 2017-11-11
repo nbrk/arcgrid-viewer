@@ -4,8 +4,12 @@
 A simple viewer for ESRI/ArcInfo (ArcGrid) files. A user can pan, zoom and
 rotate the rendered dataset with keyboard and mouse (see _Controls_).
 
+
+![alt text](https://github.com/nbrk/arcgrid-viewer/doc/scr_alps.png "Screenshot")
+
+
 The program uses shades of red normalized by minimum and maximum value in the
-VAT of the curent dataset. Black colour represents lower value than the red.
+VAT of the curent dataset. Black colour represents lower value than the red one.
 
 ## Installation
 Currently, as this:
@@ -14,9 +18,10 @@ Currently, as this:
 $ git clone https://github.com/nbrk/arcgrid.git
 $ git clone https://github.com/nbrk/arcgrid-viewer.git
 $ cd arcgrid-viewer
-$ stack build
-$ # read a set (currently, only .asc files)
-$ stack exec arcgrid-viewer ../arcgrid/app/alps_big.asc
+$ stack install
+$ # usually stack will install the program binary in ~/.local/bin (you can add it to PATH if you want)
+
+$ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
 ```
 
 ## Usage
