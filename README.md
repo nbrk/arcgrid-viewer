@@ -30,12 +30,13 @@ $ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
 ## Usage
 
 ``` sh
-arcgrid-viewer <file.arc>
+arcgrid-viewer <file.asc>
 ```
 
 Please keep in mind that big datasets take time and resources to parse and render!
 
-There is some sample elevation data from the Alps. It is located 
+There is some sample `.asc` elevation data from the Alps. It resides in `arcgrid`
+library and is [located](https://github.com/nbrk/arcgrid/tree/master/app) in `arcgrid/app/*.asc`.
 
 ## Controls
 The program uses `gloss` library for rendering and display. Therefore, the
