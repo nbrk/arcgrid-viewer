@@ -15,7 +15,8 @@ $ git clone https://github.com/nbrk/arcgrid.git
 $ git clone https://github.com/nbrk/arcgrid-viewer.git
 $ cd arcgrid-viewer
 $ stack build
-$ stack exec arcgrid-viewer <dataset.asc>
+$ # read a set (currently, only .asc files)
+$ stack exec arcgrid-viewer ../arcgrid/app/alps_big.asc
 ```
 
 ## Usage
