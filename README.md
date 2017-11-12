@@ -28,9 +28,11 @@ $ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
 ```
 
 ## Usage
+You must specifiy desired color mode and a file name. Supported color modes are
+`red`, `bw` (black and white) and `fancy` (try it yourself!).
 
 ``` sh
-arcgrid-viewer <file.asc>
+arcgrid-viewer <red|bw|fancy> <file.asc>
 ```
 
 Please keep in mind that big datasets take time and resources to parse and render!

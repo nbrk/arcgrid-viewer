@@ -4,12 +4,18 @@ import System.Environment
 import Graphics.Gloss
 import qualified Data.List as L
 import qualified Data.Vector as V
-import Data.Traversable
+import Data.IORef
+import System.IO.Unsafe
 
 import ArcGrid
 
+data ColorMode = Red | BW | Fancy
+
+colorModeRef :: IORef ColorMode
+colorModeRef = unsafePerformIO $ newIORef Red
+
 bgColor :: Color
-bgColor = greyN 0.8
+bgColor = white
 
 squareWidth :: Float
 squareWidth = 1
@@ -18,14 +24,20 @@ main :: IO ()
 main = do
   args <- getArgs
   case args of
-    [] -> usage
-    fname:_ -> displayFile fname
+    mstr:fname:_ -> do
+      let mode = case mstr of
+                   "bw" -> BW
+                   "fancy" -> Fancy
+                   otherwise -> Red -- default
+      writeIORef colorModeRef mode
+      displayFile fname
+    otherwise -> usage
 
 
 usage :: IO ()
 usage = do
   pname <- getProgName
-  putStrLn $ "Usage: " ++ pname ++ " <file>" ++
+  putStrLn $ "Usage: " ++ pname ++ " <red|bw|fancy> <file>" ++
     "\nBeware that big (i.e. bigger than 150x150 cells) files take time to process!"
 
 
@@ -62,9 +74,37 @@ determineValueColor (vmin, vmax) v =
   let d = fromIntegral $ vmax - vmin
       prg = fromIntegral $ v - vmin
       rat = prg / d
+      zone = determineThermalZone rat
+      mode = unsafePerformIO $ readIORef colorModeRef
   in
-    makeColor rat 0 0 1
+    case mode of
+      Red -> makeColor rat 0 0 1
+      BW -> greyN rat
+      Fancy -> determineThermalZoneColor rat zone
 
+
+determineThermalZone :: Float -> Int
+determineThermalZone rat = determineThermalZone' $ rat * 5
+
+
+determineThermalZone' :: Float -> Int
+determineThermalZone' rat | 0 <= rat && rat < 1 = 1
+determineThermalZone' rat | 1 <= rat && rat < 2 = 2
+determineThermalZone' rat | 2 <= rat && rat < 3 = 3
+determineThermalZone' rat | 3 <= rat && rat < 4 = 4
+determineThermalZone' rat | 4 <= rat && rat <= 5 = 5
+
+
+determineThermalZoneColor :: Float -> Int -> Color
+determineThermalZoneColor rat zone =
+  let i = (rat * 5) / (fromIntegral zone)
+  in
+    case zone of
+      1 -> makeColor 0 0 i 1
+      2 -> makeColor 0 i 1 1
+      3 -> makeColor 0 1 (1 - i) 1
+      4 -> makeColor i 1 0 1
+      5 -> makeColor 1 (1 - i) 0 1
 
 pictureValue :: Int -> Picture
 pictureValue v =
