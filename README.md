@@ -25,7 +25,7 @@ $ cd arcgrid-viewer
 $ stack install
 # Usually stack will install the program binary in ~/.local/bin .
 # You can add it to PATH of you want.
-$ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
+$ ~/.local/bin/arcgrid-viewer ../arcgrid/sample/alps_huge.asc
 ```
 
 ## Usage
@@ -42,7 +42,7 @@ The defaults are to render **in raster** with **red gradient**.
 Please keep in mind that big datasets take time and resources to parse and render!
 
 There is some sample `.asc` elevation data from the Alps. It resides in `arcgrid`
-library and is [located](https://github.com/nbrk/arcgrid/tree/master/app) in `arcgrid/app/*.asc`.
+library and is [located](https://github.com/nbrk/arcgrid/tree/master/sample) in `arcgrid/sample`.
 
 ## Controls
 The program uses `gloss` library for rendering and display. Therefore, the
