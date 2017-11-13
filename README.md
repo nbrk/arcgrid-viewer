@@ -8,8 +8,9 @@ rotate the rendered dataset with keyboard and mouse (see _Controls_).
 ![alt text](https://github.com/nbrk/arcgrid-viewer/blob/master/doc/scr_alps.png "Screenshot")
 
 
-The program uses shades of red normalized by minimum and maximum value in the
-VAT of the curent dataset. Black colour represents lower value than the red one.
+The program uses shades of red (by default) normalized by minimum and maximum
+value in the VAT of the curent dataset. Black colour represents lower value than
+the red one.
 
 ## Installation
 The program depends on `gloss` and `arcgrid` libraries. The easiest way is to
@@ -28,13 +29,16 @@ $ ~/.local/bin/arcgrid-viewer ../arcgrid/app/alps_big.asc
 ```
 
 ## Usage
-You must specifiy desired color mode and a file name. Supported color modes are
-`red`, `bw` (black and white) and `fancy` (try it yourself!).
+The program supports rendering the dataset in few color schemes (red, black and
+white, a spectre) in both vector and raster modes. 
 
-``` sh
-arcgrid-viewer <red|bw|fancy> <file.asc>
+```
+Usage: arcgrid-viewer [OPTION...] <file>
+  -c MODE  --color=MODE  color scheme: red|bw|fancy
+  -r MODE  --mode=MODE   rendering mode: vector|raster
 ```
 
+The defaults are to render **in raster** with **red gradient**.
 Please keep in mind that big datasets take time and resources to parse and render!
 
 There is some sample `.asc` elevation data from the Alps. It resides in `arcgrid`
