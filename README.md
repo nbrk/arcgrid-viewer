@@ -5,7 +5,7 @@ A simple viewer for ESRI/ArcInfo (ArcGrid) files. A user can pan, zoom and
 rotate the rendered dataset with keyboard and mouse (see _Controls_).
 
 
-![alt text](https://github.com/nbrk/arcgrid-viewer/blob/master/doc/scr_alps.png "Screenshot")
+![alt text](https://github.com/nbrk/arcgrid-viewer/blob/master/doc/scr_alps3.png "Screenshot")
 
 
 The program uses shades of red (by default) normalized by minimum and maximum
