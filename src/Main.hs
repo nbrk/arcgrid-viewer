@@ -11,7 +11,7 @@ import View
 
 defaultOptions = Options
                { optColorScheme = RedScheme
-               , optRenderMode = VectorMode
+               , optRenderMode = RasterMode
                , optBGColor = white
                , optSqSize = 1
                , optInput = ""
