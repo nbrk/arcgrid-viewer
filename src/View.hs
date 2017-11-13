@@ -15,8 +15,9 @@ viewArcGridFile :: ReaderT Options IO ()
 viewArcGridFile = do
   opts <- ask
   ag <- lift $ arcGridFromFile (optInput opts)
-  lift $ putStrLn "Parser done."
-  lift $ putStrLn $ "Forming " ++ show (ncols ag) ++ "x" ++ show (nrows ag) ++ " viewport..."
+  lift $ putStrLn $
+    "Parser done. " ++
+    "Forming " ++ show (ncols ag) ++ "x" ++ show (nrows ag) ++ " viewport... "
 
   let rcs = [(r, c) | r <- [0..(nrows ag) - 1], c <- [0..(ncols ag) - 1]]
   let vs' = L.sort $ vat ag
