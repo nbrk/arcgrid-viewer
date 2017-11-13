@@ -8,16 +8,22 @@ import Types
 colorFromValue :: Int -> ReaderT ViewerCtx IO Color
 colorFromValue v = do
   (vmin, vmax) <- asks vctxMinMaxVal
-  c <- asks vctxColorScheme
-  -- X between A and B; we want Y to fall between C and D
-  -- Y = (X-A)/(B-A) * (D-C) + C
-  let d = fromIntegral $ abs $ vmax - vmin
-  let dv = fromIntegral $ abs $ v - vmin
-  let int = dv / d * (1.0 - 0) + 0
-  case c of
-    RedScheme -> return $ makeColor int 0 0 1
-    BWScheme -> return $ greyN int
-    FancyScheme -> fancyColor int
+  nodata <- asks vctxNodataVal
+  if (Just v) == nodata then
+    do
+      return $ makeColor 1 0 1 1
+    else
+    do
+      c <- asks vctxColorScheme
+      -- X between A and B; we want Y to fall between C and D
+      -- Y = (X-A)/(B-A) * (D-C) + C
+      let d = fromIntegral $ abs $ vmax - vmin
+      let dv = fromIntegral $ abs $ v - vmin
+      let int = dv / d * (1.0 - 0) + 0
+      case c of
+        RedScheme -> return $ makeColor int 0 0 1
+        BWScheme -> return $ greyN int
+        FancyScheme -> fancyColor int
 
 
 fancyColor :: Float -> ReaderT ViewerCtx IO Color

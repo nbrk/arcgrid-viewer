@@ -20,7 +20,7 @@ viewArcGridFile = do
     "Forming " ++ show (ncols ag) ++ "x" ++ show (nrows ag) ++ " viewport... "
 
   let rcs = [(r, c) | r <- [0..(nrows ag) - 1], c <- [0..(ncols ag) - 1]]
-  let vs' = L.sort $ vat ag
+  let vs' = filter (\v -> (Just v) /= nodata_value ag) $ L.sort $ vat ag
   let vctx = ViewerCtx
              { vctxRenderMode = optRenderMode opts
              , vctxColorScheme = optColorScheme opts
