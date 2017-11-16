@@ -11,7 +11,6 @@ import View
 
 defaultOptions = Options
                { optColorScheme = RedScheme
-               , optRenderMode = RasterMode
                , optBGColor = white
                , optSqSize = 1
                , optInput = ""
@@ -23,19 +22,11 @@ parseColorScheme "bw" = BWScheme
 parseColorScheme "fancy" = FancyScheme
 parseColorScheme _ = error "Incorrect color scheme"
 
-parseRenderMode :: String -> RenderMode
-parseRenderMode "raster" = RasterMode
-parseRenderMode "vector" = VectorMode
-parseRenderMode _ = error "Incorrect rendering mode"
-
 
 options :: [OptDescr (Options -> Options)]
 options =
   [ Option ['c'] ["color"]
     (ReqArg (\a opts -> opts {optColorScheme = parseColorScheme a}) "MODE") "color scheme: red|bw|fancy"
-  ,
-    Option ['r'] ["mode"]
-    (ReqArg (\a opts -> opts {optRenderMode = parseRenderMode a}) "MODE") "rendering mode: vector|raster"
   ]
 
 
