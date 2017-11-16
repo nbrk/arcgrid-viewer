@@ -3,11 +3,9 @@ module Types where
 import Graphics.Gloss (Color)
 
 data ColorScheme = RedScheme | BWScheme | FancyScheme
-data RenderMode = RasterMode | VectorMode
 
 data Options = Options
                { optColorScheme  :: ColorScheme
-               , optRenderMode :: RenderMode
                , optBGColor :: Color
                , optSqSize :: Float
                , optInput :: FilePath
@@ -15,8 +13,7 @@ data Options = Options
 
 
 data ViewerCtx = ViewerCtx
-                 { vctxRenderMode :: RenderMode
-                 , vctxColorScheme :: ColorScheme
+                 { vctxColorScheme :: ColorScheme
                  , vctxBGColor :: Color
                  , vctxSqSize :: Float
                  , vctxValTblSize :: (Int, Int)

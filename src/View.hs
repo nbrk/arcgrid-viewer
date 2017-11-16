@@ -8,7 +8,6 @@ import ArcGrid
 
 import Types
 import ColorScheme
-import Vector
 import Raster
 
 viewArcGridFile :: ReaderT Options IO ()
@@ -22,8 +21,7 @@ viewArcGridFile = do
   let rcs = [(r, c) | r <- [0..(nrows ag) - 1], c <- [0..(ncols ag) - 1]]
   let vs' = filter (\v -> (Just v) /= nodata_value ag) $ L.sort $ vat ag
   let vctx = ViewerCtx
-             { vctxRenderMode = optRenderMode opts
-             , vctxColorScheme = optColorScheme opts
+             { vctxColorScheme = optColorScheme opts
              , vctxBGColor = optBGColor opts
              , vctxSqSize = optSqSize opts
              , vctxValTblSize = (ncols ag, nrows ag)
@@ -38,10 +36,7 @@ viewArcGridFile = do
 
 makePicture :: ReaderT ViewerCtx IO Picture
 makePicture = do
-  r <- asks vctxRenderMode
-  case r of
-    VectorMode -> makeVectorPicture
-    RasterMode -> makeRasterPicture
+  makeRasterPicture
 
 
 viewContext :: ReaderT ViewerCtx IO ()
@@ -49,8 +44,4 @@ viewContext = do
   bg <- asks vctxBGColor
   pic <- makePicture
   lift $ display FullScreen bg pic
-
-
-
-
 
