@@ -1,23 +1,52 @@
+{-# LANGUAGE TemplateHaskell #-}
 module Types where
 
-import Graphics.Gloss (Color)
+import Control.Lens
+import Data.IORef
 
-data ColorScheme = RedScheme | BWScheme | FancyScheme
+-- | Colour modes (gradients)
+data ColorScheme = RedScheme | BWScheme | ThermalScheme
 
+-- | Supported data sources
+data DataSourceType = DataSourceArcGrid
+
+-- | User-given options
 data Options = Options
-               { optColorScheme  :: ColorScheme
-               , optBGColor :: Color
-               , optSqSize :: Float
-               , optInput :: FilePath
+               { _optColorScheme  :: ColorScheme
+               , _optDataFile :: FilePath
                }
 
+-- | The data matrix that is rendered by the viewer
+data Data = Data
+            { _dataValues :: [Int]
+            , _dataIgnoredValue :: Maybe Int
+            , _dataDimensions :: (Int, Int)
+            , _dataRange :: (Int, Int)
+            , _dataSourceType :: DataSourceType
+            }
 
-data ViewerCtx = ViewerCtx
-                 { vctxColorScheme :: ColorScheme
-                 , vctxBGColor :: Color
-                 , vctxSqSize :: Float
-                 , vctxValTblSize :: (Int, Int)
-                 , vctxValTblData :: [((Int, Int), Int)]
-                 , vctxMinMaxVal :: (Int, Int)
-                 , vctxNodataVal :: Maybe Int
-                 }
+-- | The current graphics context
+data GraphicsContext = GraphicsContext
+  { _gcPoints :: [(Float, Float, Float)]
+  , _gcPointsZAmplification :: (Int, Int)
+  , _gcRGBAs :: [(Float, Float, Float, Float)]
+  , _gcAngleX :: Float
+  , _gcAngleY :: Float
+  , _gcAngleZ :: Float
+  , _gcPosition :: (Float, Float)
+  , _gcZoomFactorXY :: Float
+  , _gcZoomFactorZ :: Float
+  }
+
+-- | Abstract viewer data type
+data Viewer = Viewer
+              { _viewOptions :: Options
+              , _viewData :: Data
+              , _viewGCRef :: IORef GraphicsContext
+              }
+
+
+makeLenses ''Options
+makeLenses ''Data
+makeLenses ''GraphicsContext
+makeLenses ''Viewer

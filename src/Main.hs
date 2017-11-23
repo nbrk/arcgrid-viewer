@@ -1,52 +1,12 @@
 module Main where
 
-import Graphics.Gloss (white)
-import System.Console.GetOpt
-import System.Environment
-import Data.Maybe ( fromMaybe )
-import Control.Monad.Trans.Reader
+import System.Environment (getArgs)
 
 import Types
-import View
-
-defaultOptions = Options
-               { optColorScheme = RedScheme
-               , optBGColor = white
-               , optSqSize = 1
-               , optInput = ""
-               }
-
-parseColorScheme :: String -> ColorScheme
-parseColorScheme "red" = RedScheme
-parseColorScheme "bw" = BWScheme
-parseColorScheme "fancy" = FancyScheme
-parseColorScheme _ = error "Incorrect color scheme"
-
-
-options :: [OptDescr (Options -> Options)]
-options =
-  [ Option ['c'] ["color"]
-    (ReqArg (\a opts -> opts {optColorScheme = parseColorScheme a}) "MODE") "color scheme: red|bw|fancy"
-  ]
-
-
-programOpts :: [String] -> IO (Options, [String])
-programOpts argv = do
-  pn <- getProgName
-  case getOpt Permute options argv of
-    (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
-    (_,_,errs) -> do
-      putStrLn $ "Error: " ++ concat errs
-      errorUsage options
-
-
-errorUsage :: [OptDescr a] -> IO b
-errorUsage opts = do
-  pn <- getProgName
-  putStrLn $ usageInfo (usageHeader pn) options
-  ioError $ userError ""
-  where
-    usageHeader pn = "Usage: " ++ pn ++ " [OPTION...] <file>"
+import Options
+import Data
+import GraphicsContext
+import Viewer
 
 
 main :: IO ()
@@ -55,7 +15,16 @@ main = do
 
   (opts, argv') <- programOpts argv
   case argv' of
-    fname:_ -> runReaderT viewArcGridFile $ opts {optInput = fname}
+    fname:_ -> do
+      -- prepare the data
+      d <- dataFromFile DataSourceArcGrid fname
+
+      -- init the gc of the data
+      gc <- gcInitialize opts d
+
+      -- start the viewer
+      viewerStart opts d gc
+
     otherwise -> do
       putStrLn "Error: filename required"
       putStrLn ""
