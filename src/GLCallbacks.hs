@@ -24,7 +24,7 @@ gcglDisplayCallback gcr = do
   let prs = zip (gc ^. gcPoints) (gc ^. gcRGBAs)
 
   clearColor $= Color4 1 1 1 1
-  clear [ ColorBuffer ]
+  clear [ ColorBuffer, DepthBuffer ]
   loadIdentity
 
   -- user-set pan
@@ -43,8 +43,7 @@ gcglDisplayCallback gcr = do
         renderCuboid' 1 $ intensivity (gc ^. gcPointsZAmplification) (truncate z)
 --        renderPrimitive Points $ vertex3f (x,y,z)
 
-  swapBuffers
---  flush
+  swapBuffers -- performs flush internally
 
 
 gcglKeyboardMouseCallback :: IORef GraphicsContext -> KeyboardMouseCallback

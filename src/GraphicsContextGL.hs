@@ -9,9 +9,12 @@ import GLCallbacks
 
 gcglInitialize :: IO ()
 gcglInitialize = do
-  getArgsAndInitialize
-  initialDisplayMode $= [DoubleBuffered] -- XXX
-  createWindow "Hello World"
+  initialWindowSize $= Size 1024 768
+  initialize "arcgrid-viewer" []
+
+  initialDisplayMode $= [DoubleBuffered, WithDepthBuffer] -- XXX
+  createWindow "ArcGrid Viewer"
+  fullScreen
 
   return ()
 
