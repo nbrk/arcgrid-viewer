@@ -5,6 +5,7 @@ import Data.IORef
 
 import Types
 import GLCallbacks
+import GLKeyboardMouseCallback
 
 
 gcglInitialize :: IO ()

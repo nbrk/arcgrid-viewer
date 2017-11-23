@@ -27,6 +27,13 @@ color4f (r, g, b, a) = color $ Color4 r g b (a :: GLfloat)
 color4f' :: Float -> Float -> Float -> Float -> IO ()
 color4f' r g b a = color4f (r,g,b,a)
 
+-- | A 3-vector of a float triple
+toVector3d :: (Float, Float, Float) -> Vector3 GLdouble
+toVector3d (x,y,z) = Vector3 (realToFrac x) (realToFrac y) (realToFrac z)
+
+-- | A 3-vertex of a float triple
+toVertex3d :: (Float, Float, Float) -> Vertex3 GLdouble
+toVertex3d (x,y,z) = Vertex3 (realToFrac x) (realToFrac y) (realToFrac z)
 
 -- | Render a cuboid with a x-y base, extended in z-axe
 renderCuboid :: Float -> Float -> IO ()
@@ -49,34 +56,35 @@ renderCuboid b z =
 
 
 
+-- | Base: x-z, extension is in y-axe
 renderCuboid' :: Float -> Float  -> IO ()
-renderCuboid' w z =
+renderCuboid' w y =
   preservingMatrix $ do
   renderPrimitive Quads $ do
-    vertex $ Vertex3 w w z
-    vertex $ Vertex3 w w 0
+    vertex $ Vertex3 w y w
+    vertex $ Vertex3 w y 0
     vertex $ Vertex3 w 0 0
-    vertex $ Vertex3 w 0 z
-    vertex $ Vertex3 w w z
-    vertex $ Vertex3 w w 0
-    vertex $ Vertex3 0 w 0
-    vertex $ Vertex3 0 w z
-    vertex $ Vertex3 w w z
-    vertex $ Vertex3 w 0 z
-    vertex $ Vertex3 0 0 z
-    vertex $ Vertex3 0 w z
-    vertex $ Vertex3 0 w z
-    vertex $ Vertex3 0 w 0
+    vertex $ Vertex3 w 0 w
+    vertex $ Vertex3 w y w
+    vertex $ Vertex3 w y 0
+    vertex $ Vertex3 0 y 0
+    vertex $ Vertex3 0 y w
+    vertex $ Vertex3 w y w
+    vertex $ Vertex3 w 0 w
+    vertex $ Vertex3 0 0 w
+    vertex $ Vertex3 0 y w
+    vertex $ Vertex3 0 y w
+    vertex $ Vertex3 0 y 0
     vertex $ Vertex3 0 0 (0 :: Float)
-    vertex $ Vertex3 0 0 z
-    vertex $ Vertex3 w 0 z
-    vertex $ Vertex3 w 0 0
-    vertex $ Vertex3 0 0 (0 :: Float)
-    vertex $ Vertex3 0 0 z
-    vertex $ Vertex3 w w 0
+    vertex $ Vertex3 0 0 w
+    vertex $ Vertex3 w 0 w
     vertex $ Vertex3 w 0 0
     vertex $ Vertex3 0 0 (0 :: Float)
-    vertex $ Vertex3 0 w 0
+    vertex $ Vertex3 0 0 w
+    vertex $ Vertex3 w y 0
+    vertex $ Vertex3 w 0 0
+    vertex $ Vertex3 0 0 (0 :: Float)
+    vertex $ Vertex3 0 y 0
 
 
 renderCube :: Float  -> IO ()

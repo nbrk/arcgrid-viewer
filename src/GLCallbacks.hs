@@ -6,6 +6,7 @@ import Control.Monad
 import Data.IORef
 
 import Types
+import GLKeyboardMouseCallback
 import GLHelpers
 import ColorScheme(intensivity)
 
@@ -27,47 +28,49 @@ gcglDisplayCallback gcr = do
   clear [ ColorBuffer, DepthBuffer ]
   loadIdentity
 
-  -- user-set pan
-  translate $ Vector3 (gc ^. gcPosition._1) (gc ^. gcPosition._2) 0
+--  ortho (-100) 100 (-100) 100 (-100) 100 
+  perspective (-90) (4/3) 0 10000
 
-  preservingMatrix $ do
-    rotate (gc ^. gcAngleX) (Vector3 1 0 0)
-    rotate (gc ^. gcAngleY) (Vector3 0 1 0)
-    rotate (gc ^. gcAngleZ) (Vector3 0 0 1)
-    scale (gc ^. gcZoomFactorXY) (gc ^. gcZoomFactorXY) (gc ^. gcZoomFactorZ)
-    forM_ prs $ \((x, y, z), r) ->
-      preservingMatrix $ do
-        color4f r
+  lookAt
+    (toVertex3d (gc ^. gcEyesPosition))
+    (toVertex3d (gc ^. gcEyesSeeDirection))
+    (toVector3d (gc ^. gcEyesTopDirection))
 
-        translate $ Vector3 x y 0
-        renderCuboid' 1 $ intensivity (gc ^. gcPointsZAmplification) (truncate z)
---        renderPrimitive Points $ vertex3f (x,y,z)
+  -- -- the translation
+  translate $
+    Vector3 (gc ^. gcTranslation._1)  (gc ^. gcTranslation._2) (gc ^. gcTranslation._3)
+  -- -- the rotation
+  rotate (gc ^. gcRotation._1) (Vector3 1 0 0)
+  rotate (gc ^. gcRotation._2) (Vector3 0 1 0)
+  rotate (gc ^. gcRotation._3) (Vector3 0 0 1)
+
+  -- -- the scaling
+  scale (gc ^. gcScaling._1) (gc ^. gcScaling._2) (gc ^. gcScaling._3)
+
+  -- draw axis
+  renderPrimitive Lines $ do
+    color $ Color4 0 0 0 (1 :: Float)
+    vertex3f (0,0,0)
+    vertex3f (10000,0,0)
+    vertex3f (0,0,0)
+    vertex3f (0,10000,0)
+    vertex3f (0,0,0)
+    vertex3f (0,0,10000)
+
+
+  forM_ prs $ \((x, y, z), r) ->
+    preservingMatrix $ do
+      color4f r
+      translate $ Vector3 x 0 z
+
+      let ampl = gc ^. gcPointsYAmplification
+      let (minval, maxval) = gc ^. gcPointsYAmplificationRange
+      let intens = intensivity (minval, maxval) (truncate (y + ampl))
+      renderCuboid' 1 (intens * ampl)
+--      renderObject Solid (Cube 1)
 
   swapBuffers -- performs flush internally
 
-
-gcglKeyboardMouseCallback :: IORef GraphicsContext -> KeyboardMouseCallback
-gcglKeyboardMouseCallback gcr key Down _mods _pos =
-  do
-    case key of
-      (Char 'X') -> gcr $~! (gcAngleX +~ 15)
-      (Char 'x') -> gcr $~! (gcAngleX -~ 15)
-      (Char 'Y') -> gcr $~! (gcAngleY +~ 15)
-      (Char 'y') -> gcr $~! (gcAngleY -~ 15)
-      (Char 'Z') -> gcr $~! (gcAngleZ +~ 15)
-      (Char 'z') -> gcr $~! (gcAngleZ -~ 15)
-      (Char '+') -> gcr $~! (gcZoomFactorZ *~ 2)
-      (Char '-') -> gcr $~! (gcZoomFactorZ //~ 2)
-      (SpecialKey KeyLeft ) -> gcr $~! (gcPosition %~ \(x,y) -> (x-0.1, y))
-      (SpecialKey KeyRight) -> gcr $~! (gcPosition %~ \(x,y) -> (x+0.1, y))
-      (SpecialKey KeyUp   ) -> gcr $~! (gcPosition %~ \(x,y) -> (x, y+0.1))
-      (SpecialKey KeyDown ) -> gcr $~! (gcPosition %~ \(x,y) -> (x, y-0.1))
-      (SpecialKey KeyPageUp) -> gcr $~! (gcZoomFactorXY *~ 2) -- 0.5
-      (SpecialKey KeyPageDown) -> gcr $~! (gcZoomFactorXY //~ 2)
-      otherwise -> return ()
-    postRedisplay Nothing
-
-gcglKeyboardMouseCallback _ _ _ _ _ = return ()
 
 
 -- gcglIdleCallback :: IORef GraphicsContext -> IdleCallback
@@ -76,4 +79,5 @@ gcglKeyboardMouseCallback _ _ _ _ _ = return ()
 --   gc <- get gcr
 --   gcr $~! (gcAngle +~ (gc ^. gcRotationSpeed))
 --   postRedisplay Nothing
+
 

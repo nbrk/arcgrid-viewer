@@ -25,17 +25,20 @@ data Data = Data
             , _dataSourceType :: DataSourceType
             }
 
+
 -- | The current graphics context
 data GraphicsContext = GraphicsContext
   { _gcPoints :: [(Float, Float, Float)]
-  , _gcPointsZAmplification :: (Int, Int)
+  , _gcPointsYAmplificationRange :: (Int, Int)
+  , _gcPointsYAmplification :: Float
   , _gcRGBAs :: [(Float, Float, Float, Float)]
-  , _gcAngleX :: Float
-  , _gcAngleY :: Float
-  , _gcAngleZ :: Float
-  , _gcPosition :: (Float, Float)
-  , _gcZoomFactorXY :: Float
-  , _gcZoomFactorZ :: Float
+
+  , _gcTranslation :: (Float, Float, Float)
+  , _gcRotation :: (Float, Float, Float)
+  , _gcScaling :: (Float, Float, Float)
+  , _gcEyesPosition :: (Float, Float, Float)
+  , _gcEyesSeeDirection :: (Float, Float, Float)
+  , _gcEyesTopDirection :: (Float, Float, Float)
   }
 
 -- | Abstract viewer data type
